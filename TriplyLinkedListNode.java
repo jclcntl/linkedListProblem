@@ -1,5 +1,7 @@
 package linkedList;
 
+import java.sql.Timestamp;
+import java.util.Date;
 
 public class TriplyLinkedListNode {
 
@@ -86,14 +88,25 @@ public class TriplyLinkedListNode {
 		return node;
 	}
 	
-//	public static TriplyLinkedListNode flattenListRec(TriplyLinkedListNode node, boolean firstLevel) {
-//		if(!firstLevel) {
-//			TriplyLinkedListNode currentNode = node;
-//			if(currentNode.getDown() != null) {
-//				
-//			}
-//		}
-//	}
+	public static TriplyLinkedListNode flattenListRec(TriplyLinkedListNode node) {
+		TriplyLinkedListNode currentNode = node;
+		if(currentNode.getDown() != null) {
+			TriplyLinkedListNode rightNode = currentNode.getRight();
+			if (rightNode != null) {
+				rightNode.setLeft(getLast(currentNode.getDown()));
+				getLast(currentNode.getDown()).setRight(rightNode);
+			}
+			
+			currentNode.setRight(currentNode.getDown());
+			currentNode.setDown(null);
+		}
+		if(currentNode.getRight() != null) {
+			flattenListRec(currentNode.getRight());
+		} else {
+			return node;
+		}
+		return node;
+	}
 	
 	public static TriplyLinkedListNode getLast(TriplyLinkedListNode node) {
 		TriplyLinkedListNode lastNode = node;
@@ -153,7 +166,18 @@ public class TriplyLinkedListNode {
 		node2_1_3.setDown(node2_1_3_1);
 		node1_4.setDown(node4_1);
 		
-		TriplyLinkedListNode currentNode = TriplyLinkedListNode.flattenList(node1_1);
+		Date startDate = new Date();
+		Timestamp startTimestamp = new Timestamp(startDate.getTime());
+		System.out.println(startTimestamp);
+		
+//		TriplyLinkedListNode currentNode = TriplyLinkedListNode.flattenList(node1_1);
+		TriplyLinkedListNode currentNode = TriplyLinkedListNode.flattenListRec(node1_1);
+//		TriplyLinkedListNode currentNode = node1_1;
+		
+		Date endDate = new Date();
+		Timestamp endTimestamp = new Timestamp(endDate.getTime());
+		System.out.println(endTimestamp);
+		System.out.println((endTimestamp.getNanos() - startTimestamp.getNanos()));
 		for(int i =0; i <= 100; i++) {
 			if (currentNode == null) {
 				break;
